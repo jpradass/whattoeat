@@ -21,10 +21,7 @@ func GetRandomRecipe() map[string]models.Recipe {
 	defer db.Close()
 
 	recipes := getNumRecipes(db)
-	// fmt.Printf("recipes: %d\n", recipes)
-
 	recipeID := selectRandomRecipeId(db, recipes)
-	// fmt.Printf("recipe ID: %s\n", recipeID)
 
 	rows, err := db.Query(
 		fmt.Sprintf(`SELECT r.Id, r.Title, r.Image, r.Description, 
