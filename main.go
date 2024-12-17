@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"html/template"
 	"net/http"
 
@@ -10,15 +11,18 @@ import (
 	"github.com/jpradass/whattoeat/db"
 )
 
+//go:embed templates/*.tmpl
+var templates embed.FS
+
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		tmpl := template.Must(template.ParseFiles("index.html"))
+		tmpl := template.Must(template.ParseFS(templates, "templates/*.tmpl"))
 		recipe := db.GetRandomRecipe()
 
-		tmpl.Execute(w, recipe)
+		tmpl.ExecuteTemplate(w, "index.tmpl", recipe)
 	})
 
 	r.Get("/favicon.png", func(w http.ResponseWriter, r *http.Request) {
